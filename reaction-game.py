@@ -7,7 +7,7 @@ root = tk.Tk()
 #dynamically updated header label
 headerText = tk.StringVar()
 headerText.set("Press 'Play' to begin")
-#tracked score
+#tracked score in program
 score = 0
 #variable that is updated for GUI
 playerScore = tk.IntVar()
@@ -15,7 +15,7 @@ playerScore.set(score)
 #color string updated for GUI
 curColor = tk.StringVar()
 #color options
-colors = ['red','blue','green']
+colors = ["red","blue","green"]
 
 class Window:
     #Constructor for GUI
@@ -30,9 +30,9 @@ class Window:
         score_frame = tk.Frame(master)
         score_frame.pack()
         #Create color buttons
-        self.red_button = tk.Button(button_frame, text="RED", bg="red", command = self.select_color("red"))
-        self.blue_button = tk.Button(button_frame, text="BLUE", bg="blue", command = self.select_color("blue"))
-        self.green_button = tk.Button(button_frame, text="GREEN", bg="green", command = self.select_color("green"))
+        self.red_button = tk.Button(button_frame, text="RED", bg="red", command = select_color("red"))
+        self.blue_button = tk.Button(button_frame, text="BLUE", bg="blue", command = select_color("blue"))
+        self.green_button = tk.Button(button_frame, text="GREEN", bg="green", command = select_color("green"))
         self.red_button.pack(padx = 10, side="left")
         self.blue_button.pack(padx = 10, anchor = "center", side="left")
         self.green_button.pack(padx = 10, side="right")
@@ -49,10 +49,14 @@ class Window:
         self.bottom_label.pack(side="left")
         self.score_label.pack(side="left")
 
-    def select_color(self, color):
-        if color == curColor:
-            global score
-            score += 5
+def select_color(color):
+    global score, playerScore
+    if color == curColor:
+        score += 5
+        playerScore.set(score)
+    else:
+        score = 0
+        playerScore.set(score)
 
 def play_game():
     timer = time.perf_counter()
@@ -61,10 +65,6 @@ def play_game():
     global curColor
     curColor.set(colors[randomNumber])
     headerText.set("Your color is:")
-    curTime = time.perf_counter()
-    while((curTime - timer) < 2):
-        curTime = time.perf_counter()
-    headerText.set("Time's up!")
 
 
 app = Window(root)
