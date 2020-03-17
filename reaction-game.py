@@ -4,7 +4,7 @@ import random as rd
 import pyodbc
 
 # --Connect to SQL Server
-#conn = pyodbc.connect('Driver={SQL Server};'
+# conn = pyodbc.connect('Driver={SQL Server};'
 #                      'Server=jpasquale\SQLEXPRESS;'
 #                      'Database=LeaderboardDB;'
 #                      'Trusted_Connection=yes;')
@@ -23,6 +23,9 @@ playerScore.set(score)
 curColor = tk.StringVar()
 # color options
 colors = ["red", "blue", "green"]
+#Leaderboard name
+firstName = "Joe"
+lastName = "Pasquale"
 
 
 class Window:
@@ -38,11 +41,11 @@ class Window:
         score_frame.pack()
         # Create color buttons
         self.red_button = tk.Button(
-            button_frame, text="RED", bg="red", command=select_color("red"))
+            button_frame, text="RED", bg="red", command=select_color(colors[0]))
         self.blue_button = tk.Button(
-            button_frame, text="BLUE", bg="blue", command=select_color("blue"))
+            button_frame, text="BLUE", bg="blue", command=select_color(colors[1]))
         self.green_button = tk.Button(
-            button_frame, text="GREEN", bg="green", command=select_color("green"))
+            button_frame, text="GREEN", bg="green", command=select_color(colors[2]))
         self.red_button.pack(padx=10, side="left")
         self.blue_button.pack(padx=10, anchor="center", side="left")
         self.green_button.pack(padx=10, side="right")
@@ -60,18 +63,31 @@ class Window:
         self.bottom_label.pack(side="left")
         self.score_label.pack(side="left")
 
-
+#Function to see if chosen color is correct
 def select_color(color):
     global score, playerScore
     if color == curColor:
-        score += 5
-        playerScore.set(score)
+        continue_game()
     else:
-        #cursor.execute(
-        #    'INSERT INTO LeaderboardDB (lname, fname, score) VALUES ({lastName}, {firstName}, {score});')
-        #conn.commit()
-        score = 0
-        playerScore.set(score)
+        end_game()
+
+#Increments score, runs play_game again
+#Needs to reset timer
+def continue_game():
+    global score
+    score += 5
+    playerScore.set(str(score))
+    play_game()
+
+
+def end_game():
+    # cursor.execute(
+    #    'INSERT INTO LeaderboardDB (lname, fname, score) VALUES ({lastName}, {firstName}, {score});')
+    # conn.commit()
+    global score
+    score = 0
+    playerScore.set(str(score))
+
 
 
 def play_game():
