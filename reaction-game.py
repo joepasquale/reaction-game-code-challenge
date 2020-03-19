@@ -95,9 +95,9 @@ def setLeaderboard(fname, lname):
 # Function to see if chosen color is correct
 def selectColor(color):
     global score, playerScore, timePassed
+    timePassed = timer.stop()
     if color is thisColor:
         #if it takes longer than two seconds for someone to click, they lose
-        timePassed = timer.stop()
         if timePassed <= 2:
             continue_game()
         else:
@@ -138,6 +138,7 @@ def end_game():
     playerScore.set(str(score))
     if timePassed > 2:
         headerText.set("Out of time! GAME OVER!")
+        
     else:
         headerText.set("Wrong! GAME OVER!")
     GUIColor.set("")
