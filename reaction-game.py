@@ -28,7 +28,8 @@ colors = ["red", "blue", "green"]
 #Leaderboard name
 firstName = "Joe"
 lastName = "Pasquale"
-
+# global seconds tracker
+secs = 0
 
 class Window:
     # Constructor for GUI
@@ -49,9 +50,9 @@ class Window:
             button_frame, text="BLUE", bg="blue", command= lambda: select_color(colors[1]))
         self.green_button = tk.Button(
             button_frame, text="GREEN", bg="green", command= lambda: select_color(colors[2]))
-        self.red_button.pack(padx=10, side="left")
-        self.blue_button.pack(padx=10, anchor="center", side="left")
-        self.green_button.pack(padx=10, side="right")
+        self.red_button.pack(padx = 50, pady = 20, side="left")
+        self.blue_button.pack(padx = 50, pady = 20, anchor="center", side="left")
+        self.green_button.pack(padx = 50, pady = 20, side="right")
         # Add selection prompt with changing color and play button
         self.header_label = tk.Label(display_frame, textvariable=headerText)
         self.color_label = tk.Label(display_frame, textvariable=GUIColor)
@@ -66,15 +67,20 @@ class Window:
         self.bottom_label.pack(side="left")
         self.score_label.pack(side="left")
 
+def timer():
+    global secs
+    secs = 0
+    while(time.sleep(1)):
+        secs += 1
+        print(secs)
+
 #Function to see if chosen color is correct
 def select_color(color):
-    print(color)
     global score, playerScore
     if color is thisColor:
-        print("continue")
-        continue_game()
+        if secs < 3:
+            continue_game()
     else:
-        print("end")
         end_game()
 
 #Increments score, runs play_game again
@@ -83,8 +89,19 @@ def continue_game():
     global score
     score += 5
     playerScore.set(str(score))
-    play_game()
+    if score >= 25:
+        win_game()
+    else:
+        play_game()
 
+def win_game():
+    # cursor.execute(
+    #    'INSERT INTO LeaderboardDB (lname, fname, score) VALUES ({lastName}, {firstName}, {score});')
+    # conn.commit()
+    global score
+    score = 0
+    GUIColor.set("")
+    headerText.set("You got 5 in a row correct! You win!")
 
 def end_game():
     # cursor.execute(
@@ -93,13 +110,14 @@ def end_game():
     global score
     score = 0
     playerScore.set(str(score))
+    headerText.set("Wrong! GAME OVER!")
+    GUIColor.set("")
 
 
 
 def play_game():
-    #timer = time.perf_counter()
+    timer()
     playerScore.set(str(score))
-    print(score)
     randomNumber = rd.randint(0, 2)
     global GUIColor, thisColor
     GUIColor.set(colors[randomNumber])
