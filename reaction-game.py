@@ -75,7 +75,7 @@ class Window:
         self.bottom_label.pack(side="left")
         self.score_label.pack(side="left")
         # Add game instructions and name entry in info_frame
-        self.game_info = tk.Message(info_frame, text="Welcome to the reaction game. Input your name below. You must choose five correct colors in a row to win. You have two seconds to select each color. Good luck!", width=300, justify = "center")
+        self.game_info = tk.Message(info_frame, text="Welcome to the reaction game. Input your name below. You must choose five correct colors in a row to win. You have two seconds to select each color. Enter your name in the fields below to add your name to the leaderboard. Good luck!", width=300, justify = "center")
         self.fname_input = tk.Entry(info_frame)
         self.fname_input.insert(0, "First name")
         self.lname_input = tk.Entry(info_frame)
