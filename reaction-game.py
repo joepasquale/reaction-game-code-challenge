@@ -5,7 +5,7 @@ import random as rd
 import pyodbc
 
 # --Connect to SQL Server
-# conn = pyodbc.connect('Driver={SQL Server};'
+#conn = pyodbc.connect('Driver={SQL Server};'
 #                      'Server=jpasquale\SQLEXPRESS;'
 #                      'Database=LeaderboardDB;'
 #                      'Trusted_Connection=yes;')
@@ -86,11 +86,12 @@ class Window:
         self.lname_input.pack()
         self.submit_button.pack(side="bottom")
         
+# saves text from entry so that they can be added to the leaderboard
 def setLeaderboard(fname, lname):
     global firstName, lastName
     firstName = fname
     lastName = lname
-    
+
 # Function to see if chosen color is correct
 def selectColor(color):
     global score, playerScore, timePassed
@@ -109,12 +110,13 @@ def continue_game():
     global score
     score += 5
     playerScore.set(str(score))
+    # If player gets five in a row, they win
     if score >= 25:
         win_game()
     else:
         play_game()
 
-
+# Win condition
 def win_game():
     timestamp = datetime.now()
     # cursor.execute(
@@ -125,7 +127,7 @@ def win_game():
     GUIColor.set("")
     headerText.set("You got 5 in a row correct! You win!")
 
-
+#loss condition
 def end_game():
     timestamp = datetime.now()
     # cursor.execute(
@@ -140,9 +142,8 @@ def end_game():
         headerText.set("Wrong! GAME OVER!")
     GUIColor.set("")
 
-
+# launches game
 def play_game():
-    print(firstName + " " + lastName)
     timer.start()
     playerScore.set(str(score))
     randomNumber = rd.randint(0, 2)
