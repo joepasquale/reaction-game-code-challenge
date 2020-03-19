@@ -1,6 +1,6 @@
 import tkinter as tk
 from timer import Timer
-import time
+from datetime import datetime
 import random as rd
 import pyodbc
 
@@ -38,15 +38,17 @@ timePassed = 0
 class Window:
     # Constructor for GUI
     def __init__(self, master):
-        # Create three frames, frame for top with choice,
+        # Create four frames: frame for game info, frame for top with choice,
         # frame in middle with buttons, frame in bottom with score
+        info_frame = tk.Frame(master)
+        info_frame.pack()
         display_frame = tk.Frame(master)
         display_frame.pack()
         button_frame = tk.Frame(master, height=24, width=72)
         button_frame.pack()
         score_frame = tk.Frame(master)
         score_frame.pack()
-        # Create color buttons, use lambda functions for command
+        # Create color buttons to add to button_frame, use lambda functions for command
         # If you don't make the command an anonymous function, then it will only execute at runtime (so the buttons won't work)
         self.red_button = tk.Button(
             button_frame, text="RED", bg="red", command=lambda: select_color(colors[0]))
@@ -57,7 +59,7 @@ class Window:
         self.red_button.pack(padx=50, pady=20, side="left")
         self.blue_button.pack(padx=50, pady=20, anchor="center", side="left")
         self.green_button.pack(padx=50, pady=20, side="right")
-        # Add selection prompt with changing color and play button
+        # Add selection prompt with changing color and play button to display_frame
         self.header_label = tk.Label(display_frame, textvariable=headerText)
         self.color_label = tk.Label(display_frame, textvariable=GUIColor)
         self.header_label.pack(side="left")
@@ -65,12 +67,20 @@ class Window:
         self.play_button = tk.Button(
             display_frame, text="Play", command=play_game)
         self.play_button.pack()
-        # Add score label
+        # Add score label for score_frame
         self.bottom_label = tk.Label(score_frame, text="Score:")
         self.score_label = tk.Label(score_frame, textvariable=playerScore)
         self.bottom_label.pack(side="left")
         self.score_label.pack(side="left")
-
+        # Add game instructions and name entry in info_frame
+        self.game_info = tk.Message(info_frame, text="Welcome to the reaction game. Input your name below. You must choose five correct colors in a row to win. You have two seconds to select each color. Good luck!", width=300, justify = "center")
+        self.fname_input = tk.Entry(info_frame)
+        self.fname_input.insert(0, "First name")
+        self.lname_input = tk.Entry(info_frame)
+        self.lname_input.insert(0, "Last name")
+        self.game_info.pack(side="top")
+        self.fname_input.pack()
+        self.lname_input.pack()
 
 # Function to see if chosen color is correct
 def select_color(color):
@@ -96,8 +106,9 @@ def continue_game():
 
 
 def win_game():
+    timestamp = datetime.now()
     # cursor.execute(
-    #    'INSERT INTO LeaderboardDB (lname, fname, score) VALUES ({lastName}, {firstName}, {score});')
+    #    'INSERT INTO LeaderboardDB (lname, fname, score, timestamp) VALUES ({lastName}, {firstName}, {score}, {timestamp});')
     # conn.commit()
     global score
     score = 0
@@ -106,8 +117,9 @@ def win_game():
 
 
 def end_game():
+    timestamp = datetime.now()
     # cursor.execute(
-    #    'INSERT INTO LeaderboardDB (lname, fname, score) VALUES ({lastName}, {firstName}, {score});')
+    #    'INSERT INTO LeaderboardDB (lname, fname, score, timestamp) VALUES ({lastName}, {firstName}, {score}, {timestamp});')
     # conn.commit()
     global score
     score = 0
@@ -117,7 +129,6 @@ def end_game():
 
 
 def play_game():
-    global timer
     timer.start()
     playerScore.set(str(score))
     randomNumber = rd.randint(0, 2)
@@ -126,7 +137,6 @@ def play_game():
     thisColor = colors[randomNumber]
     headerText.set("Your color is:")
 
-
+#opens and runs GUI
 app = Window(root)
-
 root.mainloop()
