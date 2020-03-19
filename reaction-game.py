@@ -27,8 +27,8 @@ thisColor = ""
 # color options
 colors = ["red", "blue", "green"]
 # Leaderboard name
-firstName = "Joe"
-lastName = "Pasquale"
+firstName = ""
+lastName = ""
 # timer object
 timer = Timer()
 # tracks time passed
@@ -38,6 +38,8 @@ timePassed = 0
 class Window:
     # Constructor for GUI
     def __init__(self, master):
+        # allows first and last name to be updated
+        global firstName, lastName
         # Create four frames: frame for game info, frame for top with choice,
         # frame in middle with buttons, frame in bottom with score
         info_frame = tk.Frame(master)
@@ -51,11 +53,11 @@ class Window:
         # Create color buttons to add to button_frame, use lambda functions for command
         # If you don't make the command an anonymous function, then it will only execute at runtime (so the buttons won't work)
         self.red_button = tk.Button(
-            button_frame, text="RED", bg="red", command=lambda: select_color(colors[0]))
+            button_frame, text="RED", bg="red", command=lambda: selectColor(colors[0]))
         self.blue_button = tk.Button(
-            button_frame, text="BLUE", bg="blue", command=lambda: select_color(colors[1]))
+            button_frame, text="BLUE", bg="blue", command=lambda: selectColor(colors[1]))
         self.green_button = tk.Button(
-            button_frame, text="GREEN", bg="green", command=lambda: select_color(colors[2]))
+            button_frame, text="GREEN", bg="green", command=lambda: selectColor(colors[2]))
         self.red_button.pack(padx=50, pady=20, side="left")
         self.blue_button.pack(padx=50, pady=20, anchor="center", side="left")
         self.green_button.pack(padx=50, pady=20, side="right")
@@ -78,16 +80,24 @@ class Window:
         self.fname_input.insert(0, "First name")
         self.lname_input = tk.Entry(info_frame)
         self.lname_input.insert(0, "Last name")
+        self.submit_button = tk.Button(info_frame, text = "SUBMIT", command=lambda: setLeaderboard(self.fname_input.get(), self.lname_input.get()))
         self.game_info.pack(side="top")
         self.fname_input.pack()
         self.lname_input.pack()
-
+        self.submit_button.pack(side="bottom")
+        
+def setLeaderboard(fname, lname):
+    global firstName, lastName
+    firstName = fname
+    lastName = lname
+    
 # Function to see if chosen color is correct
-def select_color(color):
-    global score, playerScore
+def selectColor(color):
+    global score, playerScore, timePassed
     if color is thisColor:
         #if it takes longer than two seconds for someone to click, they lose
-        if timer.stop() <= 2:
+        timePassed = timer.stop()
+        if timePassed <= 2:
             continue_game()
         else:
             end_game()
@@ -124,11 +134,15 @@ def end_game():
     global score
     score = 0
     playerScore.set(str(score))
-    headerText.set("Wrong! GAME OVER!")
+    if timePassed > 2:
+        headerText.set("Out of time! GAME OVER!")
+    else:
+        headerText.set("Wrong! GAME OVER!")
     GUIColor.set("")
 
 
 def play_game():
+    print(firstName + " " + lastName)
     timer.start()
     playerScore.set(str(score))
     randomNumber = rd.randint(0, 2)
